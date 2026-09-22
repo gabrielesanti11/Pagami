@@ -1,13 +1,23 @@
 {
-  "name": "CPA APMAL",
-  "short_name": "CPA",
+  "name": "PAGAMI",
+  "short_name": "PAGAMI",
+  "description": "Calcolatore paghe per troupe cinema e audiovisivo",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
   "icons": [
-    { "src": "./pagheicon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "./pagheicon-512.png", "sizes": "512x512", "type": "image/png" }
+    {
+      "src": "./pagheicon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./pagheicon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ]
 }
+
