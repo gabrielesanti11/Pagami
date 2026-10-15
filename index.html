@@ -1,24 +1,21 @@
-
 <!DOCTYPE html>
+
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PAGAMI</title>
-
-  <!-- PWA -->
-  <link rel="manifest" href="./manifest.webmanifest">
-  <meta name="theme-color" content="#0f172a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="PAGAMI">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-  <!-- Icone -->
-  <link rel="icon" type="image/png" sizes="192x192" href="./pagheicon-192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="./pagheicon-512.png">
-  <link rel="apple-touch-icon" href="./pagheicon-512.png">
-
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>PAGAMI – Continuato corretto</title>
+<!-- PWA -->
+<link href="./manifest.webmanifest" rel="manifest"/>
+<meta content="#0f172a" name="theme-color"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="PAGAMI" name="apple-mobile-web-app-title"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<!-- Icone -->
+<link href="./pagheicon-192.png" rel="icon" sizes="192x192" type="image/png"/>
+<link href="./pagheicon-512.png" rel="icon" sizes="512x512" type="image/png"/>
+<link href="./pagheicon-512.png" rel="apple-touch-icon"/>
+<style>
     :root{
       --bg:#0f172a;
       --card:#111827;
@@ -310,201 +307,335 @@
 
     #status-msg.warn{color:var(--warn);}
     #status-msg.ok{color:var(--ok);}
-  </style>
+
+/* PAGAMI CINEMA - modulo sperimentale responsive */
+.mode-switch{display:flex;gap:8px;margin:0 0 16px}
+.mode-switch button{flex:1;padding:12px;border-radius:12px;border:1px solid #334155;background:#182338;color:#cbd5e1;font-weight:750;cursor:pointer}
+.mode-switch button.active{background:#2563eb;color:white;border-color:#60a5fa}
+#cinema-module{display:none;color:#e2e8f0}
+#cinema-module .cin-card{background:#172238;border:1px solid #334155;border-radius:18px;padding:18px;margin-bottom:14px}
+#cinema-module h2{font-size:1.35rem;margin:0 0 5px}
+#cinema-module h3{font-size:1rem;margin:0 0 14px}
+#cinema-module .cin-muted{color:#a8bad1;font-size:.79rem;line-height:1.5}
+#cinema-module .cin-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#cinema-module label{font-size:.75rem;color:#b7c9e3;margin-bottom:5px}
+#cinema-module input,#cinema-module select{width:100%;min-width:0;border-radius:10px;border:1px solid #42536b;background:#0f172a;color:white;padding:10px;font-size:16px}
+#cinema-module input[type=checkbox]{width:19px;height:19px;accent-color:#3b82f6}
+#cinema-module .cin-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+#cinema-module .cin-days{display:grid;gap:9px}
+#cinema-module .cin-day{border:1px solid #354862;background:#101c30;border-radius:13px;padding:12px}
+#cinema-module .cin-day-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+#cinema-module .cin-day-title{display:flex;align-items:center;gap:9px;font-weight:750}
+#cinema-module .cin-day-title small{font-size:.7rem;color:#a9bed9;font-weight:500}
+#cinema-module .cin-day-title .weekend{color:#ffca75}
+#cinema-module .cin-day-fields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:12px}
+#cinema-module .cin-day[aria-disabled=true] .cin-day-fields{opacity:.35;pointer-events:none}
+#cinema-module .cin-day-total{font-weight:800;font-variant-numeric:tabular-nums}
+#cinema-module .cin-summary{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+#cinema-module .cin-line{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #2b3c54;padding:10px 0;font-size:.9rem}
+#cinema-module .cin-line strong{font-variant-numeric:tabular-nums}
+#cinema-module .cin-grand{display:flex;justify-content:space-between;align-items:center;padding:15px;border-radius:13px;background:#223a60;font-weight:800;margin-top:13px}
+#cinema-module .cin-grand strong{font-size:1.4rem}
+#cinema-module .cin-actions{display:flex;gap:10px;flex-wrap:wrap}
+#cinema-module .cin-btn{background:#2563eb;border:0;color:white;padding:12px 15px;border-radius:11px;font-weight:750;cursor:pointer}
+#cinema-module .cin-btn.secondary{background:#34455f}
+#cinema-module .cin-note{font-size:.74rem;line-height:1.55;color:#c4d4e9;background:#2a3142;padding:12px;border-radius:11px}
+@media(min-width:1050px){body:has(#cinema-module:not([style*="display: none"])) .app{max-width:1100px}}
+@media(max-width:650px){
+ #cinema-module .cin-fields{grid-template-columns:1fr 1fr}
+ #cinema-module .cin-fields .wide{grid-column:1/-1}
+ #cinema-module .cin-day-fields{grid-template-columns:1fr 1fr}
+ #cinema-module .cin-summary{grid-template-columns:1fr}
+ #cinema-module .cin-head{align-items:flex-start;flex-direction:column}
+ #cinema-module .cin-grand strong{font-size:1.2rem}
+}
+@media print{.mode-switch,#cinema-module .cin-actions{display:none!important}#cinema-module{display:block!important}#cinema-module .cin-card,#cinema-module .cin-day{break-inside:avoid;background:white;color:#111;border-color:#ccc}#cinema-module .cin-muted,#cinema-module label{color:#444}}
+
+  
+/* Distinct Cinema visual system: light, spacious, desktop sidebar, vertical mobile */
+body:has(#cinema-module[style*="display: block"]){background:#f1f5fb;color:#14243d}
+body:has(#cinema-module[style*="display: block"]) .app{max-width:none!important;padding:0 18px 50px 286px}
+body:has(#cinema-module[style*="display: block"]) .app>h1,
+body:has(#cinema-module[style*="display: block"]) .app>.subtitle{display:none}
+body:has(#cinema-module[style*="display: block"]) .mode-switch{max-width:520px;margin:18px 0 16px}
+body:has(#cinema-module[style*="display: block"]) .mode-switch button{background:#fff;color:#234062;border:1px solid #d5deea}
+body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{background:#2464b5;color:white}
+#cinema-module{color:#152641;max-width:1500px;margin:auto}
+#cinema-module .cin-sidebar{position:fixed;top:0;bottom:0;left:0;width:268px;padding:30px 15px;background:linear-gradient(145deg,#142236,#1c304b);color:#fff;z-index:3}
+#cinema-module .cin-brand{font-size:2rem;letter-spacing:.045em;font-weight:850;margin:0 10px 55px}
+#cinema-module .cin-brand small{display:block;font-size:.68rem;letter-spacing:.04em;font-weight:500;line-height:1.7;color:#d0daeb}
+#cinema-module .cin-nav-item{padding:15px 16px;border-radius:12px;font-size:1rem;margin-bottom:8px}
+#cinema-module .cin-nav-item small{display:block;margin-left:29px;font-size:.72rem;color:#c5d8f3;margin-top:4px}
+#cinema-module .cin-nav-item.selected{background:#2464b5}
+#cinema-module .cin-hero{padding:8px 6px 14px;margin:0}
+#cinema-module .cin-hero h2{font-size:2rem;color:#10233e}
+#cinema-module .cin-hero .cin-muted{font-size:1rem}
+#cinema-module .cin-shell{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,340px);gap:16px;align-items:start}
+#cinema-module .cin-main,#cinema-module .cin-right{min-width:0}
+#cinema-module .cin-right{position:sticky;top:16px}
+#cinema-module .cin-tabs{display:flex;gap:4px;background:#e4ebf5;border-radius:12px;padding:5px;margin-bottom:16px;overflow-x:auto}
+#cinema-module .cin-tabs span{padding:12px 15px;white-space:nowrap;font-size:.82rem;color:#35516f}
+#cinema-module .cin-tabs span.current{background:#2464b5;color:white;border-radius:9px}
+#cinema-module .cin-card{background:#fff;color:#152641;border:1px solid #e0e7f0;border-radius:15px;padding:19px;box-shadow:0 3px 15px #14243d09}
+#cinema-module .cin-card h3{font-size:1.07rem}
+#cinema-module .cin-muted{color:#60738e}
+#cinema-module label{color:#344864;font-weight:550}
+#cinema-module input,#cinema-module select{background:#fff;border:1px solid #d5deea;color:#152641;border-radius:9px}
+#cinema-module input[type=checkbox]{accent-color:#2563eb}
+#cinema-module .cin-day{background:#f8fafd;border-color:#e1e8f1}
+#cinema-module .cin-day-title small{color:#6a7f9b}
+#cinema-module .cin-day-title .weekend{color:#b97a1e}
+#cinema-module .cin-day-total{color:#1754a3}
+#cinema-module .cin-line{border-color:#e6ebf2}
+#cinema-module .cin-grand{background:#fff5e5;color:#10233e}
+#cinema-module .cin-note{background:#f3f6fa;color:#516783}
+#cinema-module .cin-btn.secondary{background:#e7edf6;color:#27476d}
+#cinema-module .cin-right .cin-card{padding:21px}
+#cinema-module .cin-right .cin-card h3{font-size:1.25rem}
+@media(min-width:1150px){#cinema-module .cin-main>.cin-card:nth-of-type(1) .cin-fields{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:1100px){
+ #cinema-module .cin-shell{grid-template-columns:minmax(0,1fr)}
+ #cinema-module .cin-right{position:static}
+}
+@media(max-width:750px){
+ body:has(#cinema-module[style*="display: block"]) .app{padding:0 11px 90px}
+ body:has(#cinema-module[style*="display: block"]) .mode-switch{margin:12px 0}
+ #cinema-module .cin-sidebar{display:none}
+ #cinema-module .cin-hero h2{font-size:1.5rem}
+ #cinema-module .cin-hero .cin-muted{font-size:.82rem}
+ #cinema-module .cin-tabs{margin-bottom:12px}
+ #cinema-module .cin-tabs span{font-size:.75rem;padding:10px}
+ #cinema-module .cin-card{padding:14px;margin-bottom:12px}
+ #cinema-module .cin-fields{grid-template-columns:1fr 1fr}
+ #cinema-module .cin-day-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #cinema-module .cin-right .cin-card{padding:16px}
+ #cinema-module .cin-right{margin-top:0}
+ #cinema-module .cin-grand{position:sticky;bottom:8px;box-shadow:0 4px 18px #0f172a22}
+}
+@media(max-width:380px){#cinema-module .cin-fields{grid-template-columns:1fr}}
+@media print{#cinema-module .cin-sidebar,#cinema-module .cin-tabs{display:none!important}body:has(#cinema-module[style*="display: block"]) .app{padding:0!important}#cinema-module .cin-shell{display:block}#cinema-module .cin-card{box-shadow:none}}
+</style>
 </head>
-
 <body>
-  <div class="app">
-    <h1>PAGAMI</h1>
-    <p class="subtitle">calcolatore turni • extra • festivo • fattura • PDF</p>
-
-    <!-- PRODUZIONE / LAVORATORE / CALENDARIO -->
-    <div class="card">
-      <label for="prod-name">Produzione</label>
-      <input id="prod-name" type="text">
-
-      <label for="worker-name" style="margin-top:8px;">Nome lavoratore</label>
-      <input id="worker-name" type="text">
-
-      <label for="role" style="margin-top:8px;">Ruolo / Profilo</label>
-      <select id="role">
-        <option value="capo-ele">Capo Elettricista</option>
-        <option value="capo-mac">Capo Macchinista</option>
-        <option value="capo-att">Capo Attrezzista</option>
-        <option value="assist-ele">Assistente Elettricista</option>
-        <option value="assist-mac">Assistente Macchinista</option>
-        <option value="operator">Operatore mdp / Steady</option>
-        <option value="assist-cam">1AC / Focus Puller</option>
-        <option value="dit">DIT / Video Assist</option>
-        <option value="aiuto-op">2AC / Loader</option>
-        <option value="cable">Cable Man</option>
-      </select>
-
-      <label style="margin-top:10px;">Calendario lavoro</label>
-
-      <div class="range-line">
-        <div>
-          <label for="range-start">Data inizio lavoro</label>
-          <input id="range-start" type="date">
-        </div>
-
-        <div>
-          <label for="range-end">Data fine lavoro</label>
-          <input id="range-end" type="date">
-        </div>
-
-        <button class="btn-small" id="genRangeBtn" type="button">Genera</button>
-      </div>
-
-      <div id="plan-tags" class="taglist"></div>
-
-      <label for="date" style="margin-top:8px;">Data (che stai compilando ora)</label>
-      <input id="date" type="date">
-
-      <p class="small-hint">Compila e “+ Aggiungi giornata” per tutte le date generate.</p>
-    </div>
-
-    <!-- OPZIONI E ORARI -->
-    <div class="card">
-      <div class="chk-line" style="margin-bottom:6px;">
-        <input type="checkbox" id="half-day">
-        <label for="half-day">Mezza giornata</label>
-      </div>
-
-      <div class="chk-line" style="margin-bottom:6px;">
-        <input type="checkbox" id="nine-plus-one">
-        <label for="nine-plus-one">9+1</label>
-      </div>
-
-      <div class="invoice-line" style="margin-bottom:12px;">
-        <label for="fattura-percent">Maggiorazione in fattura (%)</label>
-        <input id="fattura-percent" type="number" inputmode="decimal" min="0" max="300" step="1" value="0" placeholder="0">
-      </div>
-
-      <div class="grid-2x2" id="time-grid">
-        <div>
-          <label for="start">Inizio set</label>
-          <input id="start" type="time" step="900">
-        </div>
-
-        <div>
-          <label for="pstart">Inizio pausa</label>
-          <input id="pstart" type="time" step="900">
-        </div>
-
-        <div>
-          <label for="pend">Fine pausa</label>
-          <input id="pend" type="time" step="900">
-        </div>
-
-        <div>
-          <label for="end">Fine set</label>
-          <input id="end" type="time" step="900">
-        </div>
-      </div>
-
-      <div class="chk-line" style="margin-top:-2px;margin-bottom:10px;">
-        <input type="checkbox" id="late-pause-ok">
-        <label for="late-pause-ok">Pausa entro 6ª ora (condizioni speciali)</label>
-      </div>
-
-      <button class="btn-primary" id="calcBtn" type="button">CALCOLA</button>
-
-      <div class="btn-row">
-        <button class="btn-small" id="addDayBtn" type="button">+ Aggiungi giornata</button>
-        <button class="btn-small" id="showReportBtn" type="button">Riepilogo giornate</button>
-        <button class="btn-small" id="savePdfBtn" type="button">Salva PDF</button>
-      </div>
-    </div>
-
-    <!-- EXTRA -->
-    <div class="card" id="extra-card">
-      <div class="chk-line">
-        <input type="checkbox" id="rounder">
-        <label for="rounder">Arrotonda straordinari a scatti di 0:30</label>
-      </div>
-
-      <div class="extra-grid">
-        <div class="extra-box" data-key="day-simple">
-          <div class="badge-ex">
+<div class="app">
+<h1>PAGAMI</h1>
+<p class="subtitle">calcolatore turni • extra • festivo • fattura • PDF</p>
+<div aria-label="Tipo di produzione" class="mode-switch" role="group">
+<button aria-pressed="true" class="active" id="mode-pub" type="button">🎬 Pubblicità</button>
+<button aria-pressed="false" id="mode-cinema" type="button">🎥 Cinema</button>
+</div>
+<div id="pub-module">
+<!-- PRODUZIONE / LAVORATORE / CALENDARIO -->
+<div class="card">
+<label for="prod-name">Produzione</label>
+<input id="prod-name" type="text"/>
+<label for="worker-name" style="margin-top:8px;">Nome lavoratore</label>
+<input id="worker-name" type="text"/>
+<label for="role" style="margin-top:8px;">Ruolo / Profilo</label>
+<select id="role">
+<option value="capo-ele">Capo Elettricista</option>
+<option value="capo-mac">Capo Macchinista</option>
+<option value="capo-att">Capo Attrezzista</option>
+<option value="assist-ele">Assistente Elettricista</option>
+<option value="assist-mac">Assistente Macchinista</option>
+<option value="operator">Operatore mdp / Steady</option>
+<option value="assist-cam">1AC / Focus Puller</option>
+<option value="dit">DIT / Video Assist</option>
+<option value="aiuto-op">2AC / Loader</option>
+<option value="cable">Cable Man</option>
+</select>
+<label style="margin-top:10px;">Calendario lavoro</label>
+<div class="range-line">
+<div>
+<label for="range-start">Data inizio lavoro</label>
+<input id="range-start" type="date"/>
+</div>
+<div>
+<label for="range-end">Data fine lavoro</label>
+<input id="range-end" type="date"/>
+</div>
+<button class="btn-small" id="genRangeBtn" type="button">Genera</button>
+</div>
+<div class="taglist" id="plan-tags"></div>
+<label for="date" style="margin-top:8px;">Data (che stai compilando ora)</label>
+<input id="date" type="date"/>
+<p class="small-hint">Compila e “+ Aggiungi giornata” per tutte le date generate.</p>
+</div>
+<!-- OPZIONI E ORARI -->
+<div class="card">
+<div class="chk-line" style="margin-bottom:6px;">
+<input id="half-day" type="checkbox"/>
+<label for="half-day">Mezza giornata</label>
+</div>
+<div class="chk-line" style="margin-bottom:6px;">
+<input id="nine-plus-one" type="checkbox"/>
+<label for="nine-plus-one">9+1</label>
+</div>
+<div class="invoice-line" style="margin-bottom:12px;">
+<label for="fattura-percent">Maggiorazione in fattura (%)</label>
+<input id="fattura-percent" inputmode="decimal" max="300" min="0" placeholder="0" step="1" type="number" value="0"/>
+</div>
+<div class="grid-2x2" id="time-grid">
+<div>
+<label for="start">Inizio set</label>
+<input id="start" step="900" type="time"/>
+</div>
+<div>
+<label for="pstart">Inizio pausa</label>
+<input id="pstart" step="900" type="time"/>
+</div>
+<div>
+<label for="pend">Fine pausa</label>
+<input id="pend" step="900" type="time"/>
+</div>
+<div>
+<label for="end">Fine set</label>
+<input id="end" step="900" type="time"/>
+</div>
+</div>
+<div class="chk-line" style="margin-top:-2px;margin-bottom:10px;">
+<input id="late-pause-ok" disabled type="checkbox"/>
+<label for="late-pause-ok">Deroga 6ª ora (non applicata nel calcolo richiesto)</label>
+</div>
+<button class="btn-primary" id="calcBtn" type="button">CALCOLA</button>
+<div class="btn-row">
+<button class="btn-small" id="addDayBtn" type="button">+ Aggiungi giornata</button>
+<button class="btn-small" id="showReportBtn" type="button">Riepilogo giornate</button>
+<button class="btn-small" id="savePdfBtn" type="button">Salva PDF</button>
+</div>
+</div>
+<!-- EXTRA -->
+<div class="card" id="extra-card">
+<div class="chk-line">
+<input id="rounder" type="checkbox"/>
+<label for="rounder">Arrotonda straordinari a scatti di 0:30</label>
+</div>
+<div class="extra-grid">
+<div class="extra-box" data-key="day-simple">
+<div class="badge-ex">
             EX
-            <svg viewBox="0 0 100 50"><circle cx="50" cy="25" r="19" stroke-width="3" fill="none"></circle></svg>
-          </div>
-          <div class="extra-title">Extra singolo</div>
-          <div class="extra-val" id="ex-simple">0:00</div>
-        </div>
-
-        <div class="extra-box" data-key="day-double">
-          <div class="badge-ex">
+            <svg viewbox="0 0 100 50"><circle cx="50" cy="25" fill="none" r="19" stroke-width="3"></circle></svg>
+</div>
+<div class="extra-title">Extra singolo</div>
+<div class="extra-val" id="ex-simple">0:00</div>
+</div>
+<div class="extra-box" data-key="day-double">
+<div class="badge-ex">
             EX
-            <svg viewBox="0 0 100 50"><circle cx="50" cy="25" r="19" stroke-width="3" fill="none"></circle></svg>
-          </div>
-          <div class="extra-title">Extra doppio</div>
-          <div class="extra-val" id="ex-double">0:00</div>
-        </div>
-
-        <div class="extra-box" data-key="night-simple">
-          <div class="badge-ex">
+            <svg viewbox="0 0 100 50"><circle cx="50" cy="25" fill="none" r="19" stroke-width="3"></circle></svg>
+</div>
+<div class="extra-title">Extra doppio</div>
+<div class="extra-val" id="ex-double">0:00</div>
+</div>
+<div class="extra-box" data-key="night-simple">
+<div class="badge-ex">
             EX
-            <svg viewBox="0 0 100 50"><circle cx="50" cy="25" r="19" stroke-width="3" fill="none"></circle></svg>
-          </div>
-          <div class="extra-title">Notturno singolo</div>
-          <div class="extra-val" id="ex-night">0:00</div>
-        </div>
-
-        <div class="extra-box" data-key="night-double">
-          <div class="badge-ex">
+            <svg viewbox="0 0 100 50"><circle cx="50" cy="25" fill="none" r="19" stroke-width="3"></circle></svg>
+</div>
+<div class="extra-title">Notturno singolo</div>
+<div class="extra-val" id="ex-night">0:00</div>
+</div>
+<div class="extra-box" data-key="night-double">
+<div class="badge-ex">
             EX
-            <svg viewBox="0 0 100 50"><circle cx="50" cy="25" r="19" stroke-width="3" fill="none"></circle></svg>
-          </div>
-          <div class="extra-title">Notturno doppio</div>
-          <div class="extra-val" id="ex-night-double">0:00</div>
-        </div>
-
-        <div class="extra-box" data-key="festive">
-          <div class="badge-ex">
+            <svg viewbox="0 0 100 50"><circle cx="50" cy="25" fill="none" r="19" stroke-width="3"></circle></svg>
+</div>
+<div class="extra-title">Notturno doppio</div>
+<div class="extra-val" id="ex-night-double">0:00</div>
+</div>
+<div class="extra-box" data-key="festive">
+<div class="badge-ex">
             EX
-            <svg viewBox="0 0 100 50"><circle cx="50" cy="25" r="19" stroke-width="3" fill="none"></circle></svg>
-          </div>
-          <div class="extra-title">Maggiorazione festivo</div>
-          <div class="extra-val" id="ex-fest">NO</div>
-        </div>
-      </div>
-
-      <div class="extra-row" data-key="pause-miss">
-        <div class="badge-ex">
+            <svg viewbox="0 0 100 50"><circle cx="50" cy="25" fill="none" r="19" stroke-width="3"></circle></svg>
+</div>
+<div class="extra-title">Maggiorazione festivo</div>
+<div class="extra-val" id="ex-fest">NO</div>
+</div>
+</div>
+<div class="extra-row" data-key="pause-miss">
+<div class="badge-ex">
           EX
-          <svg viewBox="0 0 100 50"><circle cx="50" cy="25" r="19" stroke-width="3" fill="none"></circle></svg>
-        </div>
-        <div class="extra-title">Mancata pausa (+1h semplice)</div>
-        <div class="extra-val" id="ex-pause">0:00</div>
-      </div>
-
-      <div class="extra-row" data-key="cont">
-        <div class="badge-ex">
+          <svg viewbox="0 0 100 50"><circle cx="50" cy="25" fill="none" r="19" stroke-width="3"></circle></svg>
+</div>
+<div class="extra-title">Penale mancata pausa (solo eccezioni)</div>
+<div class="extra-val" id="ex-pause">0:00</div>
+</div>
+<div class="extra-row" data-key="cont">
+<div class="badge-ex">
           EX
-          <svg viewBox="0 0 100 50"><circle cx="50" cy="25" r="19" stroke-width="3" fill="none"></circle></svg>
-        </div>
-        <div class="extra-title">Continuato (base 7h)</div>
-        <div class="extra-val" id="ex-cont">NO</div>
-      </div>
-    </div>
+          <svg viewbox="0 0 100 50"><circle cx="50" cy="25" fill="none" r="19" stroke-width="3"></circle></svg>
+</div>
+<div class="extra-title">Continuato (base 7h)</div>
+<div class="extra-val" id="ex-cont">NO</div>
+</div>
+</div>
+<!-- TOTALI -->
+<div class="card">
+<div class="tot-row"><span>Lordo base turno</span><span id="tot-base">€ 0,00</span></div>
+<div class="tot-row"><span>Extra semplice</span><span id="tot-simple">€ 0,00</span></div>
+<div class="tot-row"><span>Extra doppio</span><span id="tot-double">€ 0,00</span></div>
+<div class="tot-row"><span>Extra notturno</span><span id="tot-night">€ 0,00</span></div>
+<div class="tot-row"><span>Maggiorazione festivo</span><span id="tot-fest">€ 0,00</span></div>
+<div class="tot-row"><span>Maggiorazione fattura</span><span id="tot-invoice">€ 0,00</span></div>
+<div class="tot-row" style="font-weight:700;"><span>TOTALE LORDO</span><span id="tot-all">€ 0,00</span></div>
+</div>
+<p id="status-msg"></p>
+</div>
+<section aria-label="Calcolo cinema" id="cinema-module"><aside class="cin-sidebar"><div class="cin-brand">PAGAMI<small>CALCOLATORE COMPENSI AUDIOVISIVO</small></div><div class="cin-nav-item">🎬   Pubblicità<small>CPA / APMAL</small></div><div class="cin-nav-item selected">🎥   Cinema<small>Troupe cinematografiche</small></div><div class="cin-nav-item">⚙   Impostazioni</div></aside>
+<div class="cin-hero">
+<div class="cin-head"><div><h2>🎥 Cinema · Calcolo settimanale</h2><div class="cin-muted">Settimane di lavorazione, extra e maggiorazioni personalizzate</div></div><div class="cin-muted">PROTOTIPO · Tariffe modificabili</div></div>
+</div><div class="cin-shell"><main class="cin-main"><nav class="cin-tabs"><span class="current">Calcolo settimanale</span><span>Giornate</span><span>Tariffe e livelli</span><span>Extra e maggiorazioni</span></nav><div class="cin-card">
+<h3>Produzione e compenso</h3>
+<div class="cin-fields">
+<div class="wide"><label for="c-prod">Produzione</label><input id="c-prod" placeholder="Titolo film / serie"/></div>
+<div><label for="c-worker">Lavoratore</label><input id="c-worker" placeholder="Nome e cognome"/></div>
+<div><label for="c-week">Lunedì della settimana</label><input id="c-week" type="date"/></div>
+<div><label for="c-role">Qualifica</label><select id="c-role"><option value="assist-ele">Elettricista · 4° livello</option><option value="capo-ele">Capo elettricista · 5° livello</option><option value="assist-mac">Macchinista · 4° livello</option><option value="capo-mac">Capo macchinista · 5° livello</option><option value="other">Altra qualifica · personalizzata</option></select></div>
+<div><label for="c-base">Paga settimanale concordata (€)</label><input id="c-base" min="0" step=".01" type="number" value="1200"/></div>
+<div><label for="c-days-base">Giorni inclusi nella paga</label><select id="c-days-base"><option value="5">5 giorni · lun–ven</option><option value="6">6 giorni</option><option value="7">7 giorni</option></select></div>
+</div>
+</div><div class="cin-card">
+<h3>Tariffe e maggiorazioni concordate</h3>
+<p class="cin-muted">Inserisci gli importi effettivamente applicabili al tuo ingaggio. Le tariffe non sono preimpostate come valori CCNL.</p>
+<div class="cin-fields">
+<div><label for="c-extra-rate">Straordinario (€ / ora)</label><input id="c-extra-rate" min="0" step=".01" type="number" value="0"/></div>
+<div><label for="c-night-rate">Maggiorazione notturna (€ / ora)</label><input id="c-night-rate" min="0" step=".01" type="number" value="0"/></div>
+<div><label for="c-sat">Sabato extra (€ / giorno)</label><input id="c-sat" min="0" step=".01" type="number" value="0"/></div>
+<div><label for="c-sun">Domenica extra (€ / giorno)</label><input id="c-sun" min="0" step=".01" type="number" value="0"/></div>
+<div><label for="c-golden-rate">Golden Hour (€ / ora)</label><input id="c-golden-rate" min="0" step=".01" type="number" value="0"/></div>
+<div><label for="c-daily-allow">Diaria / indennità (€ / giorno)</label><input id="c-daily-allow" min="0" step=".01" type="number" value="0"/></div>
+</div>
+</div><div class="cin-card">
+<div class="cin-head"><h3>Programma della settimana</h3><span class="cin-muted" id="c-hours">0 ore totali</span></div>
+<p class="cin-muted">Attiva i giorni lavorati. Le ore ordinarie sono informative; le ore extra, notturne e Golden Hour vengono valorizzate con le tariffe impostate sopra.</p>
+<div class="cin-days" id="c-days"></div>
+</div><div class="cin-card">
+<h3>Condizioni aggiuntive</h3>
+<div class="cin-fields">
+<div><label for="c-bonus">Altri compensi (€)</label><input id="c-bonus" min="0" step=".01" type="number" value="0"/></div>
+<div><label for="c-reimburse">Rimborsi spese (€)</label><input id="c-reimburse" min="0" step=".01" type="number" value="0"/></div>
+</div>
+<p class="cin-note">La paga settimanale viene conteggiata integralmente. I compensi per giornate aggiuntive (sabato/domenica) sono inseriti separatamente: non si presume alcuna maggiorazione automatica contrattuale. Il totale è una simulazione lorda, non un cedolino.</p>
+</div><div class="cin-card">
+<div class="cin-actions">
+<button class="cin-btn" id="c-print" type="button">Stampa / Salva PDF</button>
+<button class="cin-btn secondary" id="c-next" type="button">Settimana successiva →</button>
+<button class="cin-btn secondary" id="c-reset" type="button">Azzera dati Cinema</button>
+</div>
+<p class="cin-muted">I dati di prova vengono salvati automaticamente su questo dispositivo. La modalità Pubblicità rimane separata e invariata.</p>
+</div></main><aside class="cin-right"><div class="cin-card">
+<h3>Riepilogo settimanale</h3>
+<div id="c-lines"></div>
+<div class="cin-grand"><span>Totale settimana</span><strong id="c-total">€ 0,00</strong></div>
+</div></aside></div>
 
-    <!-- TOTALI -->
-    <div class="card">
-      <div class="tot-row"><span>Lordo base turno</span><span id="tot-base">€ 0,00</span></div>
-      <div class="tot-row"><span>Extra semplice</span><span id="tot-simple">€ 0,00</span></div>
-      <div class="tot-row"><span>Extra doppio</span><span id="tot-double">€ 0,00</span></div>
-      <div class="tot-row"><span>Extra notturno</span><span id="tot-night">€ 0,00</span></div>
-      <div class="tot-row"><span>Maggiorazione festivo</span><span id="tot-fest">€ 0,00</span></div>
-      <div class="tot-row"><span>Maggiorazione fattura</span><span id="tot-invoice">€ 0,00</span></div>
-      <div class="tot-row" style="font-weight:700;"><span>TOTALE LORDO</span><span id="tot-all">€ 0,00</span></div>
-    </div>
 
-    <p id="status-msg"></p>
-  </div>
 
-  <script>
+
+
+</section>
+</div>
+<script>
     function pulseBtn(btn){
       if(!btn) return;
       btn.classList.remove("clicked");
@@ -762,7 +893,7 @@
       - dalla 3ª ora complessiva = doppio;
       - ciascun minuto viene poi distinto tra diurno e notturno.
     */
-    function classifyOvertime(workMinutes,baseMinutes,rounder){
+    function classifyOvertime(workMinutes,baseMinutes,rounder,continuato=false){
       const result={
         daySimple:0,
         dayDouble:0,
@@ -773,7 +904,7 @@
       const overtimeMinutes=workMinutes.slice(baseMinutes);
 
       overtimeMinutes.forEach((absoluteMinute,index)=>{
-        const simple=index<120;
+        const simple=!continuato && index<120;
         const night=isNightMinute(absoluteMinute);
 
         if(night&&simple) result.nightSimple++;
@@ -1002,15 +1133,13 @@
       const workMinutes=buildWorkMinutes(start,end,pstart,pend,hasPause);
       const pauseOffset=hasPause?(pstart-start):Infinity;
 
-      const pauseDeadline=(latePauseOk?6:5)*60;
-      const pauseLate=hasPause&&pauseOffset>pauseDeadline;
-
-      /*
-        Continuato quando:
-        - la pausa è assente;
-        - oppure la pausa comincia oltre 7 ore dall'inizio.
-      */
-      const cont=!hasPause||pauseOffset>7*60;
+      /* Regola operativa richiesta:
+         pausa iniziata entro la 5ª ora: ordinario senza penale;
+         dopo la 5ª e fino alla 6ª ora inclusa: ordinario + 1h semplice;
+         oltre la 6ª ora (oppure pausa assente): continuato,
+         tutte le ore oltre le 7 di base sono doppie, senza tetto software. */
+      const cont=!hasPause||pauseOffset>6*60;
+      const missMin=hasPause && pauseOffset>5*60 && pauseOffset<=6*60 ? 60 : 0;
 
       document.getElementById("ex-cont").textContent=cont?"SI":"NO";
       setAnim("cont",cont);
@@ -1019,15 +1148,7 @@
         ? 7*60
         : (ninePlusOne?9*60:8*60);
 
-      const overtime=classifyOvertime(workMinutes,baseMinutes,rounder);
-
-      /*
-        Mancata pausa:
-        - pausa assente;
-        - oppure pausa oltre la 5ª ora;
-        - entro la 6ª solo quando l'apposita condizione speciale è selezionata.
-      */
-      const missMin=(!hasPause||pauseLate)?60:0;
+      const overtime=classifyOvertime(workMinutes,baseMinutes,rounder,cont);
 
       document.getElementById("ex-simple").textContent=minToHHMM(overtime.daySimple);
       document.getElementById("ex-double").textContent=minToHHMM(overtime.dayDouble);
@@ -1093,8 +1214,12 @@
       document.getElementById("tot-invoice").textContent=euro(invoiceSurcharge);
       document.getElementById("tot-all").textContent=euro(total);
 
-      if(pauseLate){
-        setStatus("Pausa iniziata oltre il limite previsto: applicata mancata pausa.","warn");
+      if(cont){
+        setStatus("Continuato applicato: tutte le ore extra oltre le 7 ore base sono conteggiate come doppie, senza limite di 2 ore nel calcolo.","warn");
+      }else if(missMin){
+        setStatus("Pausa iniziata dopo la 5ª ed entro la 6ª ora: conteggiata 1 ora semplice di mancata pausa; turno ordinario.","warn");
+      }else{
+        setStatus("Turno ordinario: nessuna mancata pausa.","ok");
       }
 
       lastCalcSnapshot={
@@ -1228,6 +1353,55 @@
         workerTotals[worker]=daysByWorker[worker].reduce((sum,row)=>sum+Number(row.total||0),0);
       });
 
+      // Costruisce le squadre PER LA SINGOLA GIORNATA: il ruolo della persona
+      // può cambiare da un giorno all'altro.
+      function teamInfo(d){
+        const id=String(d.roleId||"").toLowerCase();
+        const label=String(roles[d.roleId]?.label||d.roleId||"").toLowerCase();
+
+        if(id.includes("ele") || label.includes("elettric")){
+          return {key:"elettricisti", order:10, isChief:id.startsWith("capo-") || label.startsWith("capo ")};
+        }
+        if(id.includes("mac") || label.includes("macchin")){
+          return {key:"macchinisti", order:20, isChief:id.startsWith("capo-") || label.startsWith("capo ")};
+        }
+        if(id.includes("att") || label.includes("attrezz")){
+          return {key:"attrezzisti", order:30, isChief:id.startsWith("capo-") || label.startsWith("capo ")};
+        }
+
+        // Ruoli senza una coppia capo/assistente nota restano gruppi autonomi.
+        return {key:"altro:"+id, order:100, isChief:id.startsWith("capo-") || label.startsWith("capo ")};
+      }
+
+      function groupCardsByTeam(cards){
+        const groups=new Map();
+
+        cards.forEach(card=>{
+          const info=teamInfo(card.d);
+          if(!groups.has(info.key)){
+            groups.set(info.key,{key:info.key,order:info.order,cards:[]});
+          }
+          groups.get(info.key).cards.push({...card,_team:info});
+        });
+
+        const result=Array.from(groups.values());
+
+        result.forEach(group=>{
+          // Capo sempre prima; a parità manteniamo l'ordine originale.
+          group.cards.sort((a,b)=>Number(b._team.isChief)-Number(a._team.isChief));
+        });
+
+        // Prima i reparti che hanno un capo in quella giornata.
+        result.sort((a,b)=>{
+          const aChief=a.cards.some(x=>x._team.isChief);
+          const bChief=b.cards.some(x=>x._team.isChief);
+          if(aChief!==bChief) return aChief?-1:1;
+          return a.order-b.order;
+        });
+
+        return result;
+      }
+
       function workerDayCard(worker,d){
         const roleLabel=roles[d.roleId]?.label||d.roleId;
 
@@ -1360,6 +1534,42 @@
     grid-template-columns:repeat(3,minmax(0,1fr));
     gap:5px;
   }
+
+  /* PDF: ogni riga rappresenta una squadra.
+     Il capo è sempre la prima scheda, seguito dagli assistenti dello stesso reparto. */
+  .teams-layout{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+    align-content:start;
+    flex:1;
+  }
+
+  .team-row{
+    display:grid;
+    gap:7px;
+    grid-template-columns:repeat(var(--team-cols, 1),minmax(0,1fr));
+    break-inside:avoid;
+    page-break-inside:avoid;
+  }
+
+  .teams-layout.compact{
+    gap:5px;
+  }
+
+  .teams-layout.compact .team-row{
+    gap:5px;
+  }
+
+  .teams-layout.compact .worker-card{padding:4px;}
+  .teams-layout.compact .worker-name{font-size:9.5px;}
+  .teams-layout.compact .worker-role{font-size:7.5px;margin-bottom:3px;}
+  .teams-layout.compact table.counts{font-size:6.8px;}
+  .teams-layout.compact .counts th,
+  .teams-layout.compact .counts td{padding:1.7px 2.5px;}
+  .teams-layout.compact .counts th{font-size:6.5px;}
+  .teams-layout.compact .day-total{font-size:8px;margin-top:3px;}
+  .teams-layout.compact .day-flags span{font-size:6.2px;}
 
   .worker-card{
     min-width:0;
@@ -1546,11 +1756,8 @@
 
           if(!cards.length) return;
 
-          let gridClass="one";
-          if(cards.length===2) gridClass="two";
-          else if(cards.length===3) gridClass="three";
-          else if(cards.length===4) gridClass="four";
-          else if(cards.length>=5) gridClass="many";
+          const teams=groupCardsByTeam(cards);
+          const compactClass=cards.length>=5?" compact":"";
 
           html+=`
 <section class="sheet">
@@ -1561,10 +1768,17 @@
 
   <div class="date-title">${escapeHtml(date)}</div>
 
-  <div class="workers-grid ${gridClass}">`;
+  <div class="teams-layout${compactClass}">`;
 
-          cards.forEach(({worker,d})=>{
-            html+=workerDayCard(worker,d);
+          teams.forEach(team=>{
+            // Squadra orizzontale: Capo -> Assistente -> Assistente...
+            // Fino a 4 schede sulla stessa riga; se sono di più, la griglia va a capo.
+            const cols=Math.min(Math.max(team.cards.length,1),4);
+            html+=`<div class="team-row" style="--team-cols:${cols}">`;
+            team.cards.forEach(({worker,d})=>{
+              html+=workerDayCard(worker,d);
+            });
+            html+=`</div>`;
           });
 
           html+=`
@@ -1628,6 +1842,105 @@
       pulseBtn(e.currentTarget);
       openReport(true);
     });
+
+
+/* Modulo CINEMA sperimentale: calcolo su tariffe esplicite, NON sostitutivo di CCNL/cedolino */
+(function(){
+ const $=id=>document.getElementById(id);
+ const pub=$("pub-module"),cin=$("cinema-module"),pubBtn=$("mode-pub"),cinBtn=$("mode-cinema");
+ const money=n=>new Intl.NumberFormat("it-IT",{style:"currency",currency:"EUR"}).format(n);
+ const num=id=>Math.max(0,Number($(id).value)||0);
+ const dayNames=["Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato","Domenica"];
+ const state={};
+ function switchMode(mode){
+  const isCinema=mode==="cinema";
+  pub.style.display=isCinema?"none":"block";cin.style.display=isCinema?"block":"none";
+  pubBtn.classList.toggle("active",!isCinema);cinBtn.classList.toggle("active",isCinema);
+  pubBtn.setAttribute("aria-pressed",String(!isCinema));cinBtn.setAttribute("aria-pressed",String(isCinema));
+  try{localStorage.setItem("pagami-mode",mode)}catch(e){}
+ }
+ pubBtn.addEventListener("click",()=>switchMode("pub"));
+ cinBtn.addEventListener("click",()=>switchMode("cinema"));
+ const inputs=["c-prod","c-worker","c-week","c-role","c-base","c-days-base","c-extra-rate","c-night-rate","c-sat","c-sun","c-golden-rate","c-daily-allow","c-bonus","c-reimburse"];
+ const defaults=()=>dayNames.map((name,i)=>({active:i<5,ordinary:i<5?8:0,extra:0,night:0,golden:0}));
+ let days=defaults();
+ const today=new Date(),dow=(today.getDay()+6)%7;
+ const monday=new Date(today.getFullYear(),today.getMonth(),today.getDate()-dow);
+ const localDate=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+ $("c-week").value=localDate(monday);
+ try{
+  const saved=JSON.parse(localStorage.getItem("pagami-cinema-v1")||"null");
+  if(saved&&Array.isArray(saved.days)&&saved.days.length===7){
+   days=saved.days;
+   for(const id of inputs){if(saved.fields&&saved.fields[id]!==undefined)$(id).value=saved.fields[id]}
+  }
+ }catch(e){}
+ function save(){
+  try{localStorage.setItem("pagami-cinema-v1",JSON.stringify({fields:Object.fromEntries(inputs.map(id=>[id,$(id).value])),days}))}catch(e){}
+ }
+ function drawDays(){
+  $("c-days").innerHTML=days.map((d,i)=>`
+   <div class="cin-day" data-day="${i}" aria-disabled="${!d.active}">
+    <div class="cin-day-head">
+     <label class="cin-day-title"><input type="checkbox" data-prop="active" ${d.active?"checked":""}><span class="${i>4?"weekend":""}">${dayNames[i]}</span><small>${i===5?"6ª giornata":i===6?"Festivo / domenica":"Feriale"}</small></label>
+     <span class="cin-day-total" id="c-day-total-${i}">€ 0,00</span>
+    </div>
+    <div class="cin-day-fields">
+     <div><label>Ore ordinarie</label><input aria-label="${dayNames[i]} ore ordinarie" data-prop="ordinary" type="number" min="0" max="24" step=".5" value="${Number(d.ordinary)||0}"></div>
+     <div><label>Ore extra</label><input aria-label="${dayNames[i]} ore extra" data-prop="extra" type="number" min="0" max="24" step=".5" value="${Number(d.extra)||0}"></div>
+     <div><label>Ore notturne</label><input aria-label="${dayNames[i]} ore notturne" data-prop="night" type="number" min="0" max="24" step=".5" value="${Number(d.night)||0}"></div>
+     <div><label>Golden Hour (ore)</label><input aria-label="${dayNames[i]} golden hour" data-prop="golden" type="number" min="0" max="24" step=".5" value="${Number(d.golden)||0}"></div>
+    </div>
+   </div>`).join("");
+  $("c-days").querySelectorAll("input").forEach(input=>input.addEventListener("change",e=>{
+   const card=e.target.closest("[data-day]"),i=Number(card.dataset.day),prop=e.target.dataset.prop;
+   days[i][prop]=prop==="active"?e.target.checked:Math.max(0,Number(e.target.value)||0);
+   if(prop==="active")drawDays();
+   calculate();
+  }));
+ }
+ function calculate(){
+  const rateExtra=num("c-extra-rate"),rateNight=num("c-night-rate"),rateGolden=num("c-golden-rate");
+  let extra=0,night=0,golden=0,sat=0,sun=0,allow=0,hours=0;
+  const activeDays=days.filter(d=>d.active).length;
+  days.forEach((d,i)=>{
+   const sum=d.active?(num("c-daily-allow")+d.extra*rateExtra+d.night*rateNight+d.golden*rateGolden+(i===5?num("c-sat"):0)+(i===6?num("c-sun"):0)):0;
+   const el=$(`c-day-total-${i}`);if(el)el.textContent=money(sum);
+   if(!d.active)return;
+   hours+=(Number(d.ordinary)||0)+(Number(d.extra)||0);
+   extra+=(Number(d.extra)||0)*rateExtra;
+   night+=(Number(d.night)||0)*rateNight;
+   golden+=(Number(d.golden)||0)*rateGolden;
+   allow+=num("c-daily-allow");
+   if(i===5)sat+=num("c-sat");
+   if(i===6)sun+=num("c-sun");
+  });
+  const rows=[
+   ["Paga settimanale",num("c-base")],
+   ["Ore extra",extra],["Notturno",night],["Golden Hour",golden],
+   ["Sabato",sat],["Domenica",sun],["Diaria / indennità",allow],
+   ["Altri compensi",num("c-bonus")],["Rimborsi",num("c-reimburse")]
+  ];
+  $("c-lines").innerHTML=rows.map(([name,val])=>`<div class="cin-line"><span>${name}</span><strong>${money(val)}</strong></div>`).join("");
+  $("c-total").textContent=money(rows.reduce((sum,row)=>sum+row[1],0));
+  $("c-hours").textContent=`${hours.toLocaleString("it-IT")} ore · ${activeDays} giorni attivi`;
+  save();
+ }
+ inputs.forEach(id=>$(id).addEventListener("input",calculate));
+ drawDays();calculate();
+ $("c-print").addEventListener("click",()=>window.print());
+ $("c-next").addEventListener("click",()=>{
+  const parts=$("c-week").value.split("-").map(Number);
+  const d=new Date(parts[0],parts[1]-1,parts[2]+7);
+  $("c-week").value=localDate(d);calculate();
+ });
+ $("c-reset").addEventListener("click",()=>{
+  if(!confirm("Azzerare tutti i dati di prova del modulo Cinema?"))return;
+  try{localStorage.removeItem("pagami-cinema-v1")}catch(e){}
+  location.reload();
+ });
+ switchMode((()=>{try{return localStorage.getItem("pagami-mode")==="cinema"?"cinema":"pub"}catch(e){return "pub"}})());
+})();
 
     /* Service Worker */
     if("serviceWorker" in navigator){
