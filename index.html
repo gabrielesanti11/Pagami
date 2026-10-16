@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>PAGAMI – Continuato corretto</title>
+<title>PAGAMI – Calcolatore paghe</title>
 <!-- PWA -->
 <link href="./manifest.webmanifest" rel="manifest"/>
 <meta content="#0f172a" name="theme-color"/>
@@ -414,6 +414,66 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
 }
 @media(max-width:380px){#cinema-module .cin-fields{grid-template-columns:1fr}}
 @media print{#cinema-module .cin-sidebar,#cinema-module .cin-tabs{display:none!important}body:has(#cinema-module[style*="display: block"]) .app{padding:0!important}#cinema-module .cin-shell{display:block}#cinema-module .cin-card{box-shadow:none}}
+
+    /* Android / Chrome: make the whole date/time field an active picker target. */
+    input#range-start, input#range-end, input#date, input#start, input#pstart, input#pend, input#end{
+      position:relative;
+      min-height:46px;
+      cursor:pointer;
+      touch-action:manipulation;
+      -webkit-appearance:auto;
+      appearance:auto;
+      color-scheme:dark;
+    }
+    input#range-start::-webkit-calendar-picker-indicator, input#range-end::-webkit-calendar-picker-indicator, input#date::-webkit-calendar-picker-indicator, input#start::-webkit-calendar-picker-indicator, input#pstart::-webkit-calendar-picker-indicator, input#pend::-webkit-calendar-picker-indicator, input#end::-webkit-calendar-picker-indicator{
+      opacity:0; /* keep native picker accessible but hide its inline icon */
+      cursor:pointer;
+      min-width:22px;
+      min-height:22px;
+    }
+
+    /* Pubblicità: unobtrusive grouping, distinct section headings and separators. */
+    #pub-module > .card{
+      border:1px solid rgba(148,163,184,.26);
+      box-shadow:0 2px 14px rgba(0,0,0,.10);
+      margin-bottom:17px;
+    }
+    #pub-module .pub-section-heading{
+      display:flex;align-items:center;gap:9px;
+      margin:15px 0 12px;
+      padding:10px 0 9px;
+      border-top:1px solid rgba(148,163,184,.26);
+      border-bottom:1px solid rgba(148,163,184,.14);
+      font-size:.88rem;font-weight:750;letter-spacing:.01em;
+      color:#eaf4ff;
+    }
+    #pub-module .card > .pub-section-heading:first-child{margin-top:0;border-top:0;padding-top:0}
+    #pub-module .pub-section-icon{
+      width:29px;height:29px;display:inline-flex;align-items:center;justify-content:center;
+      background:rgba(14,165,233,.10);border:1px solid rgba(14,165,233,.23);
+      border-radius:9px;font-size:1rem;flex-shrink:0;
+    }
+    #pub-module .pub-section-subtitle{font-size:.72rem;color:var(--muted);margin:-6px 0 12px}
+    #pub-module .pub-time-heading{margin-top:14px}
+    @media(max-width:540px){#pub-module > .card{margin-bottom:14px}}
+
+    /* Keep extra results inside their card at every mobile width. */
+    #pub-module #extra-card{min-width:0;max-width:100%;box-sizing:border-box;overflow:hidden}
+    #pub-module #extra-card .extra-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-width:0}
+    #pub-module #extra-card .extra-box{min-width:0;box-sizing:border-box;gap:7px;padding:9px 7px}
+    #pub-module #extra-card .badge-ex{flex:0 0 30px;width:30px;min-width:30px}
+    #pub-module #extra-card .badge-ex svg{left:-9px}
+    #pub-module #extra-card .extra-title{flex:1 1 auto;min-width:0;overflow-wrap:break-word;font-size:clamp(.63rem,2.6vw,.76rem)}
+    #pub-module #extra-card .extra-val{flex:0 0 auto;white-space:nowrap;font-size:clamp(.63rem,2.5vw,.72rem)}
+    #pub-module #extra-card .extra-row{min-width:0}
+    #pub-module #extra-card .extra-row .extra-title{min-width:0}
+    @media(max-width:370px){
+      #pub-module #extra-card .extra-grid{grid-template-columns:minmax(0,1fr)}
+      #pub-module #extra-card .extra-box{padding:10px}
+      #pub-module #extra-card .badge-ex{flex-basis:44px;width:44px}
+      #pub-module #extra-card .badge-ex svg{left:-5px}
+    }
+
 </style>
 </head>
 <body>
@@ -444,7 +504,8 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
 <option value="aiuto-op">2AC / Loader</option>
 <option value="cable">Cable Man</option>
 </select>
-<label style="margin-top:10px;">Calendario lavoro</label>
+<div class="pub-section-heading"><span class="pub-section-icon" aria-hidden="true">📅</span><span>Date</span></div>
+<p class="pub-section-subtitle">Periodo di lavoro e giornata da compilare</p>
 <div class="range-line">
 <div>
 <label for="range-start">Data inizio lavoro</label>
@@ -463,6 +524,7 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
 </div>
 <!-- OPZIONI E ORARI -->
 <div class="card">
+<div class="pub-section-heading"><span class="pub-section-icon" aria-hidden="true">⚙️</span><span>Opzioni giornata</span></div>
 <div class="chk-line" style="margin-bottom:6px;">
 <input id="half-day" type="checkbox"/>
 <label for="half-day">Mezza giornata</label>
@@ -475,6 +537,7 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
 <label for="fattura-percent">Maggiorazione in fattura (%)</label>
 <input id="fattura-percent" inputmode="decimal" max="300" min="0" placeholder="0" step="1" type="number" value="0"/>
 </div>
+<div class="pub-section-heading pub-time-heading"><span class="pub-section-icon" aria-hidden="true">🕒</span><span>Orari</span></div>
 <div class="grid-2x2" id="time-grid">
 <div>
 <label for="start">Inizio set</label>
@@ -506,8 +569,9 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
 </div>
 <!-- EXTRA -->
 <div class="card" id="extra-card">
+<div class="pub-section-heading"><span class="pub-section-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:block;flex-shrink:0"><path d="M11 4h10l-2.5 5h-5z" fill="#e6aa36" stroke="#f9d478" stroke-width="1.1" stroke-linejoin="round"/><path d="M13 9h6l2 2c5.3 4.5 8 9.3 6.5 13.3-1.2 3.4-5.7 4.8-11.5 4.8S5.7 27.7 4.5 24.3C3 20.3 5.7 15.5 11 11z" fill="#e9ae38" stroke="#f8d675" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 11h12" stroke="#9e6517" stroke-width="2" stroke-linecap="round"/><text x="16" y="24" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="bold" fill="#75440d">€</text></svg></span><span>Extra e maggiorazioni</span></div>
 <div class="chk-line">
-<input id="rounder" type="checkbox"/>
+<input id="rounder" type="checkbox" checked/>
 <label for="rounder">Arrotonda straordinari a scatti di 0:30</label>
 </div>
 <div class="extra-grid">
@@ -1941,6 +2005,29 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
  });
  switchMode((()=>{try{return localStorage.getItem("pagami-mode")==="cinema"?"cinema":"pub"}catch(e){return "pub"}})());
 })();
+
+
+    /* Picker fix: Android browsers may focus a date/time field without opening
+       its native selector. Trigger it directly from the user's click/tap. */
+    (()=>{
+      const ids=["range-start","range-end","date","start","pstart","pend","end"];
+      ids.forEach(id=>{
+        const input=document.getElementById(id);
+        if(!input)return;
+        const openPicker=()=>{
+          if(input.disabled||input.readOnly)return;
+          if(typeof input.showPicker==="function"){
+            try{input.showPicker();return;}catch(err){/* native input remains editable */}
+          }
+          input.focus();
+        };
+        input.addEventListener("click",openPicker);
+        const label=document.querySelector('label[for="'+id+'"]');
+        if(label)label.addEventListener("click",()=>{
+          // Label's default click forwards to the input and opens the picker.
+        });
+      });
+    })();
 
     /* Service Worker */
     if("serviceWorker" in navigator){
