@@ -245,7 +245,7 @@
 
     .badge-ex.active svg circle{
       stroke:var(--ok);
-      transition:stroke-dashoffset .45s ease-out;
+      transition:stroke-dashoffset .75s ease-out;
       stroke-dashoffset:0;
     }
 
@@ -467,11 +467,66 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
     #pub-module #extra-card .extra-val{flex:0 0 auto;white-space:nowrap;font-size:clamp(.63rem,2.5vw,.72rem)}
     #pub-module #extra-card .extra-row{min-width:0}
     #pub-module #extra-card .extra-row .extra-title{min-width:0}
-    @media(max-width:370px){
-      #pub-module #extra-card .extra-grid{grid-template-columns:minmax(0,1fr)}
-      #pub-module #extra-card .extra-box{padding:10px}
-      #pub-module #extra-card .badge-ex{flex-basis:44px;width:44px}
-      #pub-module #extra-card .badge-ex svg{left:-5px}
+    /* Extra: keep the original two-column tile layout even on narrow phones. */
+    #pub-module #extra-card .extra-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    #pub-module #extra-card .extra-box{min-height:72px;gap:6px;padding:9px 7px}
+    #pub-module #extra-card .extra-title{line-height:1.22;overflow-wrap:anywhere}
+    #pub-module #extra-card .extra-val{margin-left:auto;text-align:right}
+    #pub-module #extra-card .extra-row{border:1px solid rgba(148,163,184,.09);background:rgba(15,23,42,.25);border-radius:14px;padding:12px 10px;margin-top:10px;gap:8px}
+    #pub-module #extra-card .extra-row .badge-ex{flex:0 0 30px}
+    @media(max-width:390px){
+      #pub-module #extra-card .extra-grid{gap:8px}
+      #pub-module #extra-card .extra-box{gap:4px;padding:8px 5px}
+      #pub-module #extra-card .badge-ex{flex:0 0 23px;width:23px;min-width:23px;font-size:.52rem}
+      #pub-module #extra-card .badge-ex svg{left:-14px}
+      #pub-module #extra-card .extra-title{font-size:.65rem}
+      #pub-module #extra-card .extra-val{font-size:.65rem}
+    }
+
+    /* EX: fixed circular geometry, centered text and slower green outline. */
+    #pub-module #extra-card .badge-ex,
+    #pub-module #extra-card .extra-row .badge-ex{
+      flex:0 0 30px;width:30px;min-width:30px;height:30px;
+      border-radius:50%;padding:0;line-height:30px;text-align:center;
+      display:flex;align-items:center;justify-content:center;
+      font-size:.59rem;position:relative;overflow:visible;
+    }
+    #pub-module #extra-card .badge-ex svg{
+      position:absolute;inset:0;left:0;top:0;width:30px;height:30px;
+      display:block;transform:none;pointer-events:none;
+    }
+    #pub-module #extra-card .badge-ex svg circle{
+      stroke-dasharray:110;stroke-dashoffset:110;
+    }
+    #pub-module #extra-card .badge-ex.active svg circle{
+      transition:stroke-dashoffset .75s ease-out;
+    }
+    #pub-module #extra-card .extra-grid>.extra-box:last-child .extra-title{overflow-wrap:anywhere}
+
+    /* Continuato: titolo otticamente centrato nella riga, EX e stato ai lati. */
+    #pub-module #extra-card .extra-row[data-key="cont"]{position:relative;min-height:76px;justify-content:space-between}
+    #pub-module #extra-card .extra-row[data-key="cont"] .extra-title{
+      position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+      width:max-content;max-width:calc(100% - 112px);text-align:center;
+      font-size:clamp(.68rem,2.9vw,.79rem);line-height:1.2;
+    }
+    #pub-module #extra-card .extra-row[data-key="cont"] .extra-val{margin-left:auto}
+
+    /* Alone bianco morbido, senza animazione di scala. */
+    #pub-module #extra-card .extra-box,
+    #pub-module #extra-card .extra-row{
+      position:relative;isolation:isolate;
+      transition:border-color .4s ease,box-shadow .55s ease,background-color .45s ease;
+      transform-origin:center center;
+    }
+    #pub-module #extra-card .extra-box.ex-lit,
+    #pub-module #extra-card .extra-row.ex-lit{
+      border-color:rgba(255,255,255,.42);
+      background-color:rgba(255,255,255,.035);
+      box-shadow:0 0 0 1px rgba(255,255,255,.10),0 0 18px 3px rgba(255,255,255,.16),inset 0 0 12px rgba(255,255,255,.045);
+    }
+    @media(prefers-reduced-motion:reduce){
+      #pub-module #extra-card .extra-box,#pub-module #extra-card .extra-row{transition:none}
     }
 
 </style>
@@ -569,7 +624,7 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
 </div>
 <!-- EXTRA -->
 <div class="card" id="extra-card">
-<div class="pub-section-heading"><span class="pub-section-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:block;flex-shrink:0"><path d="M11 4h10l-2.5 5h-5z" fill="#e6aa36" stroke="#f9d478" stroke-width="1.1" stroke-linejoin="round"/><path d="M13 9h6l2 2c5.3 4.5 8 9.3 6.5 13.3-1.2 3.4-5.7 4.8-11.5 4.8S5.7 27.7 4.5 24.3C3 20.3 5.7 15.5 11 11z" fill="#e9ae38" stroke="#f8d675" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 11h12" stroke="#9e6517" stroke-width="2" stroke-linecap="round"/><text x="16" y="24" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="bold" fill="#75440d">€</text></svg></span><span>Extra e maggiorazioni</span></div>
+<div class="pub-section-heading"><span class="pub-section-icon" aria-hidden="true">🤑</span><span>Extra e maggiorazioni</span></div>
 <div class="chk-line">
 <input id="rounder" type="checkbox" checked/>
 <label for="rounder">Arrotonda straordinari a scatti di 0:30</label>
@@ -578,7 +633,7 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
 <div class="extra-box" data-key="day-simple">
 <div class="badge-ex">
             EX
-            <svg viewbox="0 0 100 50"><circle cx="50" cy="25" fill="none" r="19" stroke-width="3"></circle></svg>
+            <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" fill="none" r="16" stroke-width="3"></circle></svg>
 </div>
 <div class="extra-title">Extra singolo</div>
 <div class="extra-val" id="ex-simple">0:00</div>
@@ -586,7 +641,7 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
 <div class="extra-box" data-key="day-double">
 <div class="badge-ex">
             EX
-            <svg viewbox="0 0 100 50"><circle cx="50" cy="25" fill="none" r="19" stroke-width="3"></circle></svg>
+            <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" fill="none" r="16" stroke-width="3"></circle></svg>
 </div>
 <div class="extra-title">Extra doppio</div>
 <div class="extra-val" id="ex-double">0:00</div>
@@ -594,7 +649,7 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
 <div class="extra-box" data-key="night-simple">
 <div class="badge-ex">
             EX
-            <svg viewbox="0 0 100 50"><circle cx="50" cy="25" fill="none" r="19" stroke-width="3"></circle></svg>
+            <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" fill="none" r="16" stroke-width="3"></circle></svg>
 </div>
 <div class="extra-title">Notturno singolo</div>
 <div class="extra-val" id="ex-night">0:00</div>
@@ -602,7 +657,7 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
 <div class="extra-box" data-key="night-double">
 <div class="badge-ex">
             EX
-            <svg viewbox="0 0 100 50"><circle cx="50" cy="25" fill="none" r="19" stroke-width="3"></circle></svg>
+            <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" fill="none" r="16" stroke-width="3"></circle></svg>
 </div>
 <div class="extra-title">Notturno doppio</div>
 <div class="extra-val" id="ex-night-double">0:00</div>
@@ -610,24 +665,24 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
 <div class="extra-box" data-key="festive">
 <div class="badge-ex">
             EX
-            <svg viewbox="0 0 100 50"><circle cx="50" cy="25" fill="none" r="19" stroke-width="3"></circle></svg>
+            <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" fill="none" r="16" stroke-width="3"></circle></svg>
 </div>
 <div class="extra-title">Maggiorazione festivo</div>
 <div class="extra-val" id="ex-fest">NO</div>
 </div>
-</div>
-<div class="extra-row" data-key="pause-miss">
+<div class="extra-box" data-key="pause-miss">
 <div class="badge-ex">
           EX
-          <svg viewbox="0 0 100 50"><circle cx="50" cy="25" fill="none" r="19" stroke-width="3"></circle></svg>
+          <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" fill="none" r="16" stroke-width="3"></circle></svg>
 </div>
-<div class="extra-title">Penale mancata pausa (solo eccezioni)</div>
+<div class="extra-title">Mancata pausa</div>
 <div class="extra-val" id="ex-pause">0:00</div>
+</div>
 </div>
 <div class="extra-row" data-key="cont">
 <div class="badge-ex">
           EX
-          <svg viewbox="0 0 100 50"><circle cx="50" cy="25" fill="none" r="19" stroke-width="3"></circle></svg>
+          <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" fill="none" r="16" stroke-width="3"></circle></svg>
 </div>
 <div class="extra-title">Continuato (base 7h)</div>
 <div class="extra-val" id="ex-cont">NO</div>
@@ -903,21 +958,22 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
       const circle=el.querySelector("svg circle");
       if(!badge||!circle) return;
 
+      el.classList.toggle("ex-lit",on);
       if(on){
         badge.classList.remove("active");
         circle.style.transition="none";
-        circle.style.strokeDashoffset=150;
+        circle.style.strokeDashoffset=110;
         void badge.offsetWidth;
         badge.classList.add("active");
 
         requestAnimationFrame(()=>{
-          circle.style.transition="stroke-dashoffset .45s ease-out";
+          circle.style.transition="stroke-dashoffset .75s ease-out";
           circle.style.strokeDashoffset=0;
         });
       }else{
         badge.classList.remove("active");
         circle.style.transition="none";
-        circle.style.strokeDashoffset=150;
+        circle.style.strokeDashoffset=110;
       }
     }
 
