@@ -245,7 +245,7 @@
 
     .badge-ex.active svg circle{
       stroke:var(--ok);
-      transition:stroke-dashoffset .75s ease-out;
+      transition:stroke-dashoffset .45s ease-out;
       stroke-dashoffset:0;
     }
 
@@ -499,7 +499,7 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
       stroke-dasharray:110;stroke-dashoffset:110;
     }
     #pub-module #extra-card .badge-ex.active svg circle{
-      transition:stroke-dashoffset .75s ease-out;
+      transition:stroke-dashoffset .45s ease-out;
     }
     #pub-module #extra-card .extra-grid>.extra-box:last-child .extra-title{overflow-wrap:anywhere}
 
@@ -512,18 +512,20 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
     }
     #pub-module #extra-card .extra-row[data-key="cont"] .extra-val{margin-left:auto}
 
-    /* Alone bianco morbido, senza animazione di scala. */
+    /* Glow uniforme bianco per tutti i riquadri extra. */
+    #pub-module #extra-card [data-key]{--glow:255,255,255}
     #pub-module #extra-card .extra-box,
     #pub-module #extra-card .extra-row{
       position:relative;isolation:isolate;
       transition:border-color .4s ease,box-shadow .55s ease,background-color .45s ease;
-      transform-origin:center center;
     }
     #pub-module #extra-card .extra-box.ex-lit,
     #pub-module #extra-card .extra-row.ex-lit{
-      border-color:rgba(255,255,255,.42);
-      background-color:rgba(255,255,255,.035);
-      box-shadow:0 0 0 1px rgba(255,255,255,.10),0 0 18px 3px rgba(255,255,255,.16),inset 0 0 12px rgba(255,255,255,.045);
+      border-color:rgba(var(--glow),.58);
+      background-color:rgba(var(--glow),.055);
+      box-shadow:0 0 0 1px rgba(var(--glow),.12),
+                 0 0 19px 3px rgba(var(--glow),.22),
+                 inset 0 0 12px rgba(var(--glow),.055);
     }
     @media(prefers-reduced-motion:reduce){
       #pub-module #extra-card .extra-box,#pub-module #extra-card .extra-row{transition:none}
@@ -967,7 +969,7 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
         badge.classList.add("active");
 
         requestAnimationFrame(()=>{
-          circle.style.transition="stroke-dashoffset .75s ease-out";
+          circle.style.transition="stroke-dashoffset .45s ease-out";
           circle.style.strokeDashoffset=0;
         });
       }else{
@@ -1593,17 +1595,31 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
 
   .sheet{
     width:100%;
-    min-height:277mm;
+    height:auto;
+    min-height:0;
     break-after:page;
     page-break-after:always;
-    display:flex;
-    flex-direction:column;
+    display:block;
   }
+  .sheet:last-child{break-after:auto;page-break-after:auto}
 
-  .sheet:last-child{
-    break-after:auto;
-    page-break-after:auto;
-  }
+  /* Two dates share a page only when each date has a single horizontal team row.
+     Never stretch the report to an artificial full-page height or clip content. */
+  .two-date-sheet{height:auto;min-height:0;overflow:visible}
+  .two-date-sheet .two-date-content{display:block}
+  .two-date-sheet .date-block{display:block;break-inside:avoid;page-break-inside:avoid}
+  .two-date-sheet .date-block + .date-block{border-top:1px solid #d1d5db;padding-top:4mm;margin-top:5mm}
+  .two-date-sheet .teams-layout{display:block}
+  .two-date-sheet .team-row{gap:5px}
+  .two-date-sheet .worker-card{padding:4px}
+  .two-date-sheet .worker-name{font-size:10px}
+  .two-date-sheet .worker-role{font-size:7.5px;margin-bottom:3px}
+  .two-date-sheet table.counts{font-size:7.3px}
+  .two-date-sheet .counts th,.two-date-sheet .counts td{padding:2px 3px}
+  .two-date-sheet .counts th{font-size:7px}
+  .two-date-sheet .day-total{font-size:8.5px;margin-top:3px}
+  .two-date-sheet .day-flags span{font-size:6.5px}
+  .two-date-sheet .date-title{margin-bottom:4px}
 
   .report-head{
     display:flex;
@@ -1772,22 +1788,12 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
     width:100%;
   }
 
-  .single-worker-days{
-    display:grid;
-    grid-template-rows:repeat(2,minmax(0,1fr));
-    gap:7px;
-    flex:1;
-  }
+  .single-worker-days{display:block}
 
-  .single-day-block{
-    min-height:0;
-    display:flex;
-    flex-direction:column;
-  }
+  .single-day-block{display:block;break-inside:avoid;page-break-inside:avoid}
+  .single-day-block + .single-day-block{border-top:1px solid #d1d5db;padding-top:4mm;margin-top:5mm}
 
-  .single-day-block .worker-card{
-    flex:1;
-  }
+  .single-day-block .worker-card{width:100%;max-width:100%}
 
   .single-day-block .date-title{
     margin-bottom:4px;
@@ -1823,88 +1829,79 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
       grid-template-columns:1fr;
     }
   }
+
+  /* Stable worker columns: up to four detailed daily tables per A4 sheet. */
+  .pagami-worker-sheet{display:block!important;min-height:0!important;height:auto!important;overflow:visible!important}
+  .worker-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5mm;align-items:start}
+  .worker-columns.one-column{grid-template-columns:minmax(0,1fr);max-width:100%}
+  .worker-column{min-width:0;display:flex;flex-direction:column;gap:3mm}
+  .worker-date-block{break-inside:avoid;page-break-inside:avoid;min-width:0}
+  .worker-date-block .date-title{font-size:9px;margin:0 0 2mm;padding:1mm 2mm;background:#edf2f7;border-radius:2px}
+  .worker-date-block .worker-card{padding:3mm;min-width:0;border-radius:3px}
+  .worker-date-block .worker-name{font-size:10px}
+  .worker-date-block .worker-role{font-size:8px;margin-bottom:2mm}
+  .worker-date-block table.counts{font-size:7.3px}
+  .worker-date-block .counts th{font-size:7px}
+  .worker-date-block .counts th,.worker-date-block .counts td{padding:1.6px 3px;line-height:1.18}
+  .worker-date-block .day-total{font-size:8.6px;margin-top:2mm}
+  .worker-date-block .day-flags{margin-top:1mm}
+  .worker-final-total{margin-top:1mm;padding:3mm 2mm;border-top:1.5px solid #111827;text-align:right;font-size:10.5px;font-weight:700;break-inside:avoid}
+  @media print{.worker-columns{grid-template-columns:repeat(2,minmax(0,1fr))!important}.worker-columns.one-column{grid-template-columns:1fr!important}}
 </style>
 </head>
 
 <body>`;
 
-      /*
-        LAYOUT PDF:
-        - 1 solo lavoratore: fino a 2 giornate nello stesso foglio, una sotto l'altra.
-        - 2+ lavoratori: un foglio per ogni giorno.
-          2 lavoratori = affiancati.
-          3/4 lavoratori = griglia 2x2.
-          5+ lavoratori = griglia a 3 colonne, più compatta.
-      */
-      if(workers.length===1){
-        const worker=workers[0];
-        const entries=[...daysByWorker[worker]].sort((a,b)=>a.date.localeCompare(b.date));
-
-        for(let i=0;i<entries.length;i+=2){
-          const chunk=entries.slice(i,i+2);
-
-          html+=`
-<section class="sheet single-worker-sheet">
-  <header class="report-head">
-    <h1 class="report-title">Conteggi – ${escapeHtml(prodName)}</h1>
-    <div class="report-meta">${escapeHtml(rangeLabel)}</div>
-  </header>
-
-  <div class="single-worker-days">`;
-
-          chunk.forEach(d=>{
-            html+=`
-    <section class="single-day-block">
-      <div class="date-title">${escapeHtml(d.date)}</div>
-      ${workerDayCard(worker,d)}
-    </section>`;
-          });
-
-          html+=`
-  </div>
-  <div class="footer-total">Totale ${escapeHtml(worker)}: ${euro(workerTotals[worker])}</div>
-</section>`;
-        }
-      }else{
-        sortedDates.forEach(date=>{
-          const cards=[];
-
-          workers.forEach(worker=>{
-            const d=daysByWorker[worker].find(row=>row.date===date);
-            if(d) cards.push({worker,d});
-          });
-
-          if(!cards.length) return;
-
-          const teams=groupCardsByTeam(cards);
-          const compactClass=cards.length>=5?" compact":"";
-
-          html+=`
-<section class="sheet">
-  <header class="report-head">
-    <h1 class="report-title">Conteggi – ${escapeHtml(prodName)}</h1>
-    <div class="report-meta">${escapeHtml(rangeLabel)}</div>
-  </header>
-
-  <div class="date-title">${escapeHtml(date)}</div>
-
-  <div class="teams-layout${compactClass}">`;
-
-          teams.forEach(team=>{
-            // Squadra orizzontale: Capo -> Assistente -> Assistente...
-            // Fino a 4 schede sulla stessa riga; se sono di più, la griglia va a capo.
-            const cols=Math.min(Math.max(team.cards.length,1),4);
-            html+=`<div class="team-row" style="--team-cols:${cols}">`;
-            team.cards.forEach(({worker,d})=>{
-              html+=workerDayCard(worker,d);
+      /* PAGAMI PDF - Max 4 tabelle per A4, colonna stabile per persona.
+         Due lavoratori: a sinistra giorno 1 e 2, a destra giorno 1 e 2.
+         Ogni pagina contiene al massimo 2 colonne x 2 giorni.
+         Per un solo lavoratore usiamo fino a 4 giorni in una colonna.
+         I totali finali sono individuali e visibili sotto l'ultima tabella. */
+      function workerRank(worker){
+        const earliest=[...daysByWorker[worker]].sort((a,b)=>a.date.localeCompare(b.date))[0];
+        const info=teamInfo(earliest||{});
+        return {order:info.order,chief:info.isChief};
+      }
+      const orderedWorkers=[...workers].sort((a,b)=>{
+        const A=workerRank(a),B=workerRank(b);
+        return A.order-B.order || Number(B.chief)-Number(A.chief);
+      });
+      const maxWorkersInPage=2;
+      for(let w=0;w<orderedWorkers.length;w+=maxWorkersInPage){
+        const people=orderedWorkers.slice(w,w+maxWorkersInPage);
+        const allGroupDates=[...new Set(people.flatMap(person=>daysByWorker[person].map(d=>d.date)))].sort();
+        const maxDates=people.length===1?4:2;
+        for(let i=0;i<allGroupDates.length;i+=maxDates){
+          const dates=allGroupDates.slice(i,i+maxDates);
+          const isLastForGroup=i+maxDates>=allGroupDates.length;
+          const hasCards=people.some(person=>dates.some(date=>daysByWorker[person].some(d=>d.date===date)));
+          if(!hasCards)continue;
+          html+=`<section class="sheet pagami-worker-sheet">
+            <header class="report-head">
+              <h1 class="report-title">Conteggi – ${escapeHtml(prodName)}</h1>
+              <div class="report-meta">${escapeHtml(rangeLabel)}</div>
+            </header>
+            <div class="worker-columns ${people.length===1?'one-column':''}">`;
+          people.forEach(person=>{
+            const personDays=daysByWorker[person];
+            html+=`<div class="worker-column">`;
+            dates.forEach(date=>{
+              const d=personDays.find(row=>row.date===date);
+              if(!d)return;
+              html+=`<section class="worker-date-block">
+                <div class="date-title">${escapeHtml(date)}</div>
+                ${workerDayCard(person,d)}
+              </section>`;
             });
+            // Display the full-worker total only below their final sheet.
+            const lastDate=personDays.map(d=>d.date).sort().slice(-1)[0];
+            if(isLastForGroup||dates.includes(lastDate)){
+              html+=`<div class="worker-final-total">Tot ${escapeHtml(person)} = ${euro(workerTotals[person])}</div>`;
+            }
             html+=`</div>`;
           });
-
-          html+=`
-  </div>
-</section>`;
-        });
+          html+=`</div></section>`;
+        }
       }
 
       html+=`
@@ -1914,43 +1911,95 @@ body:has(#cinema-module[style*="display: block"]) .mode-switch button.active{bac
       return html;
     }
 
-    function openReport(printAfterOpen){
+    /* Print on the SAME document, never a popup/about:blank.
+       All generated content is mounted before calling the native Android print UI. */
+    let reportPreviewOpen=false;
+    let printRoot=null;
+    let printStyles=null;
+    let reportPreviewBar=null;
+    let reportPreviewStyles=null;
+    function closeReportPreview(){
+      reportPreviewOpen=false;
+      if(printRoot) printRoot.remove();
+      if(printStyles) printStyles.remove();
+      if(reportPreviewBar) reportPreviewBar.remove();
+      if(reportPreviewStyles) reportPreviewStyles.remove();
+      printRoot=printStyles=reportPreviewBar=reportPreviewStyles=null;
+      document.body.classList.remove("pagami-report-preview");
+    }
+    function prepareReport(){
       if(!allPlannedDatesCovered()){
         setStatus("Completa tutte le giornate generate prima del riepilogo.","warn");
-        return;
+        return false;
       }
-
-      const report=buildReportHtml();
-      const prodName=document.getElementById("prod-name").value.trim()||"produzione";
-      const documentTitle="conteggi_"+cleanFileName(prodName);
-
-      const win=window.open("","_blank");
-
-      if(!win){
-        setStatus("Popup bloccato: abilita l'apertura delle finestre per questa app.","warn");
-        return;
+      if(!Object.values(daysByWorker).some(rows=>rows.length)){
+        setStatus("Aggiungi almeno una giornata prima di esportare il PDF.","warn");
+        return false;
       }
-
-      win.document.open();
-      win.document.write(report);
-      win.document.close();
-      win.document.title=documentTitle;
-
+      try{
+        const report=buildReportHtml();
+        const documentModel=new DOMParser().parseFromString(report,"text/html");
+        if(!documentModel.querySelector(".sheet")) throw Error("Nessuna pagina da esportare");
+        closeReportPreview();
+        printRoot=document.createElement("div");
+        printRoot.id="pagami-print-root";
+        printRoot.innerHTML=documentModel.body.innerHTML;
+        document.body.appendChild(printRoot);
+        const reportCss=documentModel.querySelector("style")?.textContent||"";
+        // @page cannot be nested inside @media print.
+        const cssWithoutPage=reportCss.replace(/@page\s*\{[^}]*\}/g,"");
+        printStyles=document.createElement("style");
+        printStyles.id="pagami-print-style";
+        printStyles.textContent=`
+          #pagami-print-root{display:none}
+          @page{size:A4 portrait;margin:8mm}
+          @media print{
+            body{margin:0!important;padding:0!important;background:white!important;color:#111827!important}
+            body>.app{display:none!important}
+            #pagami-report-controls{display:none!important}
+            #pagami-print-root{display:block!important}
+            ${cssWithoutPage}
+            #pagami-print-root .sheet{min-height:0!important;height:auto!important;overflow:visible!important}
+            #pagami-print-root .teams-layout{flex:none!important}
+          }
+          body.pagami-report-preview>.app{display:none}
+          body.pagami-report-preview #pagami-print-root{display:block;background:white;color:#111827;max-width:100%;padding:12px}
+          body.pagami-report-preview #pagami-print-root .sheet{min-height:0;height:auto;overflow:visible;border-bottom:2px dashed #94a3b8;padding-bottom:14px;margin-bottom:14px}
+          @media screen {body.pagami-report-preview #pagami-print-root .worker-card{color:#111827}}
+        `;
+        document.head.appendChild(printStyles);
+        return true;
+      }catch(error){
+        closeReportPreview();
+        setStatus("Errore nella preparazione del PDF: "+error.message,"warn");
+        return false;
+      }
+    }
+    function openReport(printAfterOpen){
+      if(!prepareReport())return;
       if(printAfterOpen){
-        win.addEventListener("load",()=>{
-          setTimeout(()=>{
-            win.focus();
-            win.print();
-          },250);
-        });
+        setStatus("Documento pronto: scegli ‘Salva come PDF’ nella stampa.","ok");
+        // Layout is forced synchronously to preserve Android user activation.
+        void printRoot.offsetHeight;
+        window.print();
+      }else{
+        reportPreviewOpen=true;
+        document.body.classList.add("pagami-report-preview");
+        // Show the actual report styles in the on-screen preview.
+        const reportModel=new DOMParser().parseFromString(buildReportHtml(),"text/html");
+        reportPreviewStyles=document.createElement("style");
+        reportPreviewStyles.textContent=(reportModel.querySelector("style")?.textContent||"").replace(/@page\s*\{[^}]*\}/g,"");
+        document.head.appendChild(reportPreviewStyles);
+        reportPreviewBar=document.createElement("div");
+        reportPreviewBar.id="pagami-report-controls";
+        reportPreviewBar.innerHTML='<button type="button" id="pagami-report-back">← Torna a PAGAMI</button><button type="button" id="pagami-report-print">Salva PDF</button>';
+        reportPreviewBar.style.cssText="display:flex;gap:10px;position:sticky;top:0;z-index:100;background:#0f172a;padding:12px;justify-content:center";
+        reportPreviewBar.querySelectorAll("button").forEach(btn=>btn.style.cssText="background:#0ea5e9;color:white;border:0;border-radius:10px;padding:12px;font-size:15px");
+        document.body.insertBefore(reportPreviewBar,printRoot);
+        document.getElementById("pagami-report-back").onclick=closeReportPreview;
+        document.getElementById("pagami-report-print").onclick=()=>window.print();
+        window.scrollTo(0,0);
       }
-
-      setStatus(
-        printAfterOpen
-          ? "Documento pronto per il salvataggio in PDF."
-          : "Riepilogo aperto in nuova scheda.",
-        "ok"
-      );
     }
 
     document.getElementById("showReportBtn").addEventListener("click",(e)=>{
